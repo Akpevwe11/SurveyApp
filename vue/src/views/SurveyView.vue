@@ -231,11 +231,15 @@ import store from "../store";
 import PageComponent from '../components/PageComponent.vue';
 import QuestionEditor from "../components/editor/QuestionEditor.vue"
 import { ref } from "vue";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 //Create empty survey
 
+const router = useRouter(); 
+
 const route = useRoute();
+
+
 
 let model = ref({
   title: "",
@@ -262,6 +266,33 @@ function addQuestion(index) {
   };
 
   model.value.questions.splice(index, 0, newQuestion);
+}
+
+function deleteQuestion(question) {
+  model.value.questions = model.value.questions.filter(
+    (q) => q !== question
+  );
+}
+
+function questionChange(question) {
+  model.value.questions = model.value.questions.map((q) => {
+    if(q.id === question.id) {
+      return JSON.parse(JSON.stringify(question));;
+    }
+    return q;
+  });
+}
+
+function saveSurvey() {
+
+  store.dispatch("saveSurvey", model.value).then(({ data}) => {
+    router.push({
+      name: "SurveyView",
+      params: {id: data.data.id},
+    });
+  });
+
+
 }
 </script>
 
