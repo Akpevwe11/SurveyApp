@@ -3,11 +3,25 @@
     <template v-slot:header>
       <div class="flex items-center justify-between">
           <h1 class="text-3x1 font-bold text-gray-900">
-           {{ model.id ? model.title : "Create a Survey" }}
+           {{ route.params.id ? model.title : "Create a Survey" }}
           </h1>
+
+          <button
+          v-if="route.params.id"
+          type="button"
+          @click="deleteSurvey()"
+          class="py-2 px-3 text-white bg-red-500 rounded-md
+          hover:bg-red"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 -mt-1 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          Delete Survey
+          </button>
       </div>
     </template>
-    <form @submit.prevent="saveSurvey">
+    <div v-if="surveyLoading" class="flex justify-center">Loading...</div>
+    <form v-else @submit.prevent="saveSurvey">
       <div class="shadow sm:rounded-md sm:overflow-hidden">
           <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                 <div>
@@ -231,7 +245,7 @@ import { v4 as uuidv4 } from "uuid";
 import store from "../store";
 import PageComponent from '../components/PageComponent.vue';
 import QuestionEditor from "../components/editor/QuestionEditor.vue"
-import { ref } from "vue";
+import { ref, watch, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router';
 
 //Create empty survey
@@ -239,6 +253,8 @@ import { useRoute, useRouter } from 'vue-router';
 const router = useRouter();
 
 const route = useRoute();
+
+const surveyLoading = computed(() => store.state.currentSurvey.loading);
 
 
 
@@ -252,10 +268,20 @@ let model = ref({
   questions: [],
 });
 
+
+//watch the current survey data change and when this happens we update local..
+watch(
+() => store.state.currentSurvey.data,
+(newVal, oldVal) => {
+  model.value = {
+    ...JSON.parse(JSON.stringify(newVal)),
+    status: newVal.status !== "draft",
+  };
+}
+);
+
 if(route.params.id) {
-  model.value = store.state.surveys.find(
-    (s) => s.id === parseInt(route.params.id)
-  );
+  store.dispatch('getSurvey', route.params.id);
 }
 
 function onImageChoose(ev) {
@@ -301,14 +327,28 @@ function questionChange(question) {
 
 function saveSurvey() {
 
-  store.dispatch("saveSurvey", model.value).then(({ data}) => {
+  store.dispatch("saveSurvey", model.value).then(({data}) => {
     router.push({
       name: "SurveyView",
       params: {id: data.data.id},
     });
   });
+}
 
+function deleteSurvey() {
+  if(
+    confirm(
+      `Are you sure you want to delete this survey? Operation can't be undone`
+    )
+  ) {
 
+    store.dispatch("deleteSurvey", model.value.id).then(() => {
+      router.push({
+        name: "Surveys",
+        });
+    });
+
+  }
 }
 </script>
 
