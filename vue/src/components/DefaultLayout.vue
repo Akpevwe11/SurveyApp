@@ -10,7 +10,7 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <!-- 2:56:48 Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+              <!-- 4:49:50 Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
             <router-link class="text-gray-300 hover:bg-gray-700 hover:text-white
             block px-3 py-2 rounded-md text-base font-medium
             "
@@ -128,7 +128,8 @@
     </div>
   </nav>
 
- <router-view></router-view>
+   <router-view></router-view>
+<Notification />
 </div>
 
 </template>

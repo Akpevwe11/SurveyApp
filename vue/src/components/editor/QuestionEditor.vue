@@ -258,8 +258,10 @@ const model = ref(JSON.parse(JSON.stringify(props.question)));
 const questionTypes = computed(() => store.state.questionTypes);
 
 function upperCaseFirst(str) {
-  return str.charAt(0).toUpperCase() + str.splice(1);
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+
 // Check if the question should have options
 function shouldHaveOptions() {
 

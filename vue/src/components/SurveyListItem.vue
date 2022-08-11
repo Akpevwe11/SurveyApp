@@ -1,12 +1,12 @@
 <template>
 <div>
-          <div      class="flex flex-col py-4
+                    <div class="flex flex-col py-4
                     px-6 shadow-md
                     bg-white
                     hover:bg-gray-50
                     h-[470px]
-                    "
-                  >
+                   "
+                    >
                     <img :src="survey.image_url" alt="" class="w-full h-48 object-cover" />
                     <h4 class="mt-4 tet-lg font-bold">{{ survey.title }}</h4>
                     <div v-html="survey.description" class="overflow-hidden flex-1"></div>
@@ -34,8 +34,20 @@
                   <path stroke-linecap="round"
                     stroke-linejoin="round"
                     d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-              </svg>
-                    Edit</router-link>
+              </svg>Edit</router-link>
+                    <div class="flex items-center">
+                    <a
+                    :href="`/view/survey/${survey.slug}`"
+                    target="_blank"
+                    class="h-8 w-8 flex items-center justify-center rounded-full
+                    border border-transparent text-sm text-indigo-500 focus:ring-2
+                    focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+  <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+  <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+</svg>
+                    </a>
                     <button
                     v-if="survey.id"
                     type="button"
@@ -56,7 +68,8 @@
                             </svg>
                     </button>
                     </div>
-                </div>
+                    </div>
+           </div>
 </div>
 </template>
 
